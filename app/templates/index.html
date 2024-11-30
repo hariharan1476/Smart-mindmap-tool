@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Mind Mapping Tool</title>
+</head>
+<body>
+    <h1>Smart Mind Mapping Tool</h1>
+    <form id="ideaForm">
+        <label for="ideaInput">Enter your idea:</label>
+        <input type="text" id="ideaInput" name="user_input" required>
+        <button type="submit">Submit</button>
+    </form>
+
+    <h2>Suggestions</h2>
+    <ul id="suggestionsList"></ul>
+
+    <script>
+        const form = document.getElementById('ideaForm');
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(form);
+            const response = await fetch('/suggest', {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+            
+            const suggestionsList = document.getElementById('suggestionsList');
+            suggestionsList.innerHTML = '';
+
+            result.suggestions.forEach(suggestion => {
+                const li = document.createElement('li');
+                li.textContent = suggestion;
+                suggestionsList.appendChild(li);
+            });
+        });
+    </script>
+</body>
+</html>
